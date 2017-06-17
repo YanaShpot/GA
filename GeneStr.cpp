@@ -33,8 +33,9 @@ int GeneStr::CalcCost(std::string resGene) {
 void GeneStr::MutateStr(unsigned int probability)
 {
     if(rand() % (100) < probability) {
+        
 
-          
+
 
     }
 
