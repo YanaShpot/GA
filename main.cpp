@@ -11,9 +11,8 @@ int main(int argc, char *argv[])
 {
 
     vector<string> v;
-    string myArr[] = {"H","e","l","l","o"," ","w","o","r","l","d","!"};
+    string myArr[] = {"Hello, World!"};
     v.insert(v.begin(),myArr,myArr+12);
-    //cout<<v[1]<<endl;
     GeneStr* genestr = new GeneStr("Hello world!");
     cout<<genestr->CalcCost("Hello world!")<<endl;
 
