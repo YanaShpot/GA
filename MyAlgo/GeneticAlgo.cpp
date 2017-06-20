@@ -158,6 +158,44 @@ void GeneticAlgorithm::Select()
     }
 }
 
+/*void GeneticAlgorithm::Roulette( int& index1) {
+    //go through the chromosones adding up the fitness so far
+    float FitnessSoFar = 0.0f;
+
+    //generate a random number between 0 & total fitness count
+    double Slice1 = (rand() % (int) pop.GetFitSum());
+    for (int i = 0; i < populationSize; i++) {
+        FitnessSoFar += fabs(pop.GetChromosomeFitness(i));
+
+        //if the fitness so far > random number return the chromo at this point
+        if (FitnessSoFar >= Slice1)
+
+            index1 = i;
+
+    }
+}*/
+//Selection using Roulette Wheel method
+void GeneticAlgorithm::Select2(){
+    int k = 0;
+    double FitnessSoFar = 0.0;
+    double Slice1 = 0.0;
+        for (int i = 0; i < populationSize; i++)
+        {
+            Slice1 = fmod(rand(),pop.GetFitSum());
+            for (int i = 0; i < populationSize; i++) {
+                FitnessSoFar += fabs(pop.GetChromosomeFitness(i));
+
+                //if the fitness so far > random number return the chromo at this point
+                if (FitnessSoFar >= Slice1)
+
+                    pop.CopyChromosome(k, i );
+
+            }
+
+
+        }
+    }
+
 // Set mutation rate, population size etc
 void GeneticAlgorithm::SetParameters( const int& enc,
                                       const int& crate,

@@ -24,6 +24,7 @@ public:
                      const int& tsize,
                      const std::string& path );
     void Run();
+    //void Roulette(int& index1);
 
 private:
 
@@ -32,6 +33,8 @@ private:
     void Crossover();
     void Mutate();
     void Select();
+
+    void Select2();
 
     void SetParameters( const int& enc,
                         const int& crate,

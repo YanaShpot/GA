@@ -32,6 +32,8 @@ public:
                                   float& yv);
     double GetChromosomeFitness( const int& index ) const;
     void CopyChromosome( const int& source, const int& dest );
+    void SetFitSum( const double& value );
+    double GetFitSum();
 
 private:
     Chromosome* CreateRandomChromosome();
@@ -50,8 +52,11 @@ private:
     std::string Gray2Bin( std::string gray );
     long Bin2Dec( std::string bin );
 
+
 private:
     std::vector< Chromosome* > pop;
     int chrSize;
     int encoding;
+    double fitSum = 0;
+
 };

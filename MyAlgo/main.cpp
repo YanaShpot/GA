@@ -5,7 +5,7 @@
 const int encoding_type = 0;
 const int crossover_rate = 70;
 const int mutation_rate = 5;
-const int population_size = 100;
+const int population_size = 20;
 const int number_iterations = 10000;
 const int chromosome_size = 64;
 const int tournament_size = population_size / 4;

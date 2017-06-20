@@ -142,6 +142,8 @@ double Population::EvaluatePopulation( float& bx, float& by )
         double fitness = CalcChromosomeFitness( i, x, y );
         Chromosome* chr = pop.at( i );
         chr->SetFitness( fitness );
+        //pop.SetFitSum(fitness);
+        SetFitSum(fitness);
 
         // Output the chromosome (optional - comment out if desired)
         chr->Print( i );
@@ -162,6 +164,14 @@ double Population::EvaluatePopulation( float& bx, float& by )
     //aveFitness = totalFitness / pop.size();
     return bestFitness;
 }
+
+void Population::SetFitSum( const double& value ){
+    fitSum += fabs(value);
+};
+double Population::GetFitSum() {
+    return fitSum;
+};
+
 
 // Create an arbitrary random chromosome
 Chromosome* Population::CreateRandomChromosome()

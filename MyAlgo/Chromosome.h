@@ -26,5 +26,6 @@ private:
 
     unsigned char chr[ chrSize ];
     double fitness;
+
 };
 #endif //MYGA_CHROMOSOME_H
