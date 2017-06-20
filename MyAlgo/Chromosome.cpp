@@ -30,6 +30,9 @@ void Chromosome::SetFitness( const double& value )
 {
     fitness = value;
 }
+/*void Chromosome::SetFitSum( const double& value ){
+    fitSum += value;
+};*/
 
 // Get chromosome fitness
 double Chromosome::GetFitness() const
