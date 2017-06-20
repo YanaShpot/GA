@@ -1,35 +1,60 @@
-﻿#include "Chromosome.h"
-#include <string>
+//
+// Created by bohdan on 6/19/17.
+//
+
+#include "Chromosome.h"
 #include <iostream>
-#include <math.h>
-#include "genestr.h"
 
-using namespace std;
-Chromosome::Chromosome()
+// Constructor
+Chromosome::Chromosome(int size): chrSize(size) {
+    chr = new char[size];
+}
+//Chromosome::Chromosome(void): chrSize(64) {}
+
+// Destructor
+Chromosome::~Chromosome(void) {
+    delete[] chr;
+
+}
+
+// Set chromosome element
+void Chromosome::SetChromosome( const int& index, const unsigned char& value )
 {
+    if ( index < 0 || index >= chrSize ) return;
+    chr[ index ] = value;
 }
 
-Chromosome:: Chromosome(vector<std::string> genes) {
-    for (int i = 0; i < genes.size(); ++i) {
-        m_code.push_back(*(new GeneStr(genes[i])));
+// Get chromosome element
+unsigned char Chromosome::GetChromosome( const int& index )
+{
+    unsigned char element = chr[ index ];
+    return element;
+}
+
+// Set fitness of chromosome
+void Chromosome::SetFitness( const double& value )
+{
+    fitness = value;
+}
+
+// Get chromosome fitness
+double Chromosome::GetFitness() const
+{
+    return fitness;
+}
+
+// Get number of elements in the chromosome
+int Chromosome::size() const
+{
+    return chrSize;
+}
+// Output the chromosome and its fitness
+void Chromosome::Print( const int& index ) const
+{
+    std::string str;
+    for ( int i = 0; i < chrSize; i++ ) {
+        unsigned char value = chr[ i ];
+        str.append( value == 0 ? "0" : "1" );
     }
-    m_length = genes.size();
-}
-//int Chromosome::CalculateCost(vector) {
-
-//}
-
-void Chromosome:: GetCode() {
-    // for (vector<string>::iterator it = m_code.begin();it<m_code.end();++it) {
-    //   cout<<*it<<endl;
-    // }
-}
-
-int Chromosome:: CalcCost(vector<std::string> res) {
-    int cost = 0;
-    //for (vector<string>::iterator it = res.begin();it < res.end(); ++it) {
-    for(int i = 0; i < res.size(); ++i) {
-        cost += m_code[i].CalcCost(res[i]);
-    }
-    return cost;
+    std::cout << index << "\t" << str.c_str() << "\t" << fitness << std::endl;
 }

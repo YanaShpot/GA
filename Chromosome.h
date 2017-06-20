@@ -1,25 +1,35 @@
-#pragma once
-#include <string>
-#include <vector>
-#include "Gene.h"
-#include "genestr.h"
+//
+// Created by bohdan on 6/19/17.
+//
 
-using namespace std;
+#ifndef MYGA_CHROMOSOME_H
+#define MYGA_CHROMOSOME_H
+#pragma once
+
+
 
 class Chromosome
 {
 public:
-    Chromosome();
-    Chromosome(vector<std::string> gene);
-    void GetCode();
-    int CalcCost( vector<std::string> result);
 
+    //Chromosome(void);
+    Chromosome(int size = 64);
+    ~Chromosome(void);
+
+    void SetFitness( const double& value );
+    void SetChromosome( const int& index, const unsigned char& value );
+    unsigned char GetChromosome( const int& index );
+    double GetFitness() const;
+    int size() const;
+    void Print( const int& index ) const;
+    //void SetChromosomeSize( const int& size );
 
 private:
 
-    vector<GeneStr> m_code;
-    int m_cost;
-    int m_length;
-
+   // const  int chrSize;
+    //unsigned char chr[chrSize];
+    char* chr;
+    const int chrSize;
+    double fitness;
 };
-
+#endif //MYGA_CHROMOSOME_H

@@ -1,6 +1,4 @@
-//
-// Created by bohdan on 6/19/17.
-//
+
 
 #ifndef MYGA_LOG_H
 #define MYGA_LOG_H

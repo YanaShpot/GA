@@ -1,30 +1,29 @@
-#include <iostream>
+#include "Log.h"
 #include <sstream>
-#include <string>
-#include <genestr.h>
-#include <vector>
-#include "Chromosome.h"
-using namespace std;
+#include "GeneticAlgo.h"
 
+const int encoding_type = 0;
+const int crossover_rate = 70;
+const int mutation_rate = 5;
+const int population_size = 100;
+const int number_iterations = 10000;
+const int number_parameters = 2;
+const int tournament_size = population_size / 4;
 
-int main(int argc, char *argv[])
+int main()
 {
+    // Run the GA!
+    GeneticAlgorithm ga;
 
-    vector<string> v;
-    string myArr[] = {"Hello, World!"};
-    v.insert(v.begin(),myArr,myArr+12);
-    GeneStr* genestr = new GeneStr("Hello world!");
-    cout<<genestr->CalcCost("Hello world!")<<endl;
-
-    delete genestr;
-
-    Chromosome* chr = new Chromosome(v);
-    cout<<chr->CalcCost(v);
-
-    // std::string s = "Hello world!";
-    //cout<<(int)s[0]<<endl;
-
-
+    ga.Initialize( encoding_type,
+                   crossover_rate,
+                   mutation_rate,
+                   population_size,
+                   number_iterations,
+                   number_parameters,
+                   tournament_size,
+                   "/Users/Yasya/Desktop/res_a.txt");
+    ga.Run();
 
     return 0;
 }

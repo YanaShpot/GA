@@ -12,11 +12,12 @@ const std::string filepath = "/home/bohdan/Desktop/haaa.txt";
 GeneticAlgorithm::GeneticAlgorithm(void)
 {
     // Give it some default parameters
-    encoding = 0;
+    pop.SetChromosomeEncoding(0);
     mutationRate = 5;
     crossoverRate = 90;
     populationSize = 100;
     numberIterations = 10000;
+    numberParams = 2;
     chromosomeSize = 64;
     tournamentSize = populationSize / 5;
     bestFitness = infinity;
@@ -31,11 +32,11 @@ void GeneticAlgorithm::Initialize( const int& enc,
                                    const int& mrate,
                                    const int& psize,
                                    const int& iter,
-                                   const int& csize,
+                                   const int& params,
                                    const int& tsize,
                                    const std::string& path )
 {
-    SetParameters( enc, crate, mrate, psize, iter, csize, tsize );
+    SetParameters( enc, crate, mrate, psize, iter, params, tsize );
     CreatePopulation();
     log.Open( path.c_str() );
 }
@@ -55,8 +56,8 @@ void GeneticAlgorithm::Run()
 // Evaulate fitnesses of population chromosomes
 double GeneticAlgorithm::Evaluate()
 {
-    float bx = -1;
-    float by = -1;
+    float bx = 0.0;
+    float by = 0.0;
     double best = pop.EvaluatePopulation( bx, by );
     if ( best < bestFitness )
     {
@@ -68,13 +69,14 @@ double GeneticAlgorithm::Evaluate()
 }
 
 // Apply crossover to selected chromosome pairs
+//Генеруємо рамдомно  нову популяцію за доп. кросоверів подвійних!
 void GeneticAlgorithm::Crossover()
 {
     for ( int i = 0; i < populationSize; i++ )
     {
-        int r = rand() % 100;
+        //int r = rand() % 100;
 
-        if ( r < crossoverRate )
+        if (  rand() % 100 < crossoverRate )
         {
             int index1 = rand() % populationSize;
             int index2 = rand() % populationSize;
@@ -85,40 +87,41 @@ void GeneticAlgorithm::Crossover()
 
             // Get crossover points
             // Point1: 0 - 31
-            int point1 = rand() % chromosomeSize / 2;
+            int point1 = rand() % chromosomeSize / 2 ;
 
-            // Point1: 32 - 64
+            // Point2: 32 - 64
             int point2 = chromosomeSize / 2 +
-                         rand() % ( chromosomeSize / 2 );
+                         rand() % ( chromosomeSize / 2 ) + 1;
 
-            while ( point1 == point2 ) {
+            while ( (point1 + 1) == point2 ) {
                 point2 = chromosomeSize / 2 +
                          rand() % ( chromosomeSize / 2 );
             }
+            //point1 can't be greater than point2
 
-            if ( point1 > point2 )
+            /*if ( point1 > point2 )
             {
                 int tmp = point1;
                 point1 = point2;
                 point2 = tmp;
-            }
+            }*/
 
-            // Do 1-point crossover
+            // Do 2-point crossover
             pop.Crossover( index1, index2, point1, point2 );
         }
     }
 }
 
+//maked it easier
 // Mutate selected chromosomes
 void GeneticAlgorithm::Mutate()
 {
-    for ( int i = 0; i < populationSize; i++ )
+
+    for ( int i = 0; i < (populationSize * mutationRate)/100; i++ )
     {
-        int r = rand() % 100;
-        if ( r < mutationRate )
-        {
-            pop.Mutation( i );
-        }
+        int r = rand() % populationSize;
+        pop.Mutation(r);
+
     }
 }
 
@@ -164,16 +167,19 @@ void GeneticAlgorithm::SetParameters( const int& enc,
                                       const int& mrate,
                                       const int& psize,
                                       const int& iter,
-                                      const int& csize,
+                                      const int& params,
                                       const int& tsize )
 {
+    //encoding = enc;
     mutationRate = mrate;
     crossoverRate = crate;
     populationSize = psize;
     numberIterations = iter;
-    chromosomeSize = csize;
+    numberParams = params;
+    chromosomeSize = params * 32;
     tournamentSize = tsize;
     pop.SetChromosomeEncoding( enc );
+    pop.SetChromosomeSize(chromosomeSize);
 }
 
 // Create initial random population of chromosomes
