@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7)
-project(GA)
+project(MyGA)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp Chromosome.cpp Chromosome.h Gene_impl.hpp Gene.h GeneBit.cpp GeneBit.h GeneStr.cpp GeneStr.h Population.cpp Population.h)
-add_executable(GA ${SOURCE_FILES})
+set(SOURCE_FILES MyAlgo/main.cpp MyAlgo/Chromosome.cpp MyAlgo/GeneticAlgo.cpp MyAlgo/Log.cpp MyAlgo/Population.cpp)
+add_executable(MyGA ${SOURCE_FILES})
