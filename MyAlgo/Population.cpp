@@ -9,17 +9,17 @@ const int divisor_31 = 2147483647; // 2 ^ 31 - 1
 
 Population::Population(void)
 {
-    // Set default chromosome size
+    // Set default chromosome size 32 + 32 = 64 - two numbers
     chrSize = 64;
 }
 
 Population::~Population(void)
 {
-    int size = (int) pop.size();
+    int size =  pop.size();
     for ( int i = 0; i < size; i++ )
     {
         Chromosome* chr = pop.at( i );
-        if ( chr )
+        if ( chr != NULL)
         {
             delete chr;
         }
@@ -43,12 +43,14 @@ void Population::CreateRandomPopulation( const int& size )
     }
 }
 
-// Apply one-point crossover to selected chromosome pair
-void Population::Crossover( const int& index1, const int& index2,
+// Apply one-point crossover to selected chromosome pair (the simplest)
+/*void Population::Crossover( const int& index1, const int& index2,
                             const int& point )
 {
     if ( point < 0 || point >= chrSize )
+    {
         return;
+    }
 
     Chromosome* chr1 = pop.at( index1 );
     Chromosome* chr2 = pop.at( index2 );
@@ -60,20 +62,22 @@ void Population::Crossover( const int& index1, const int& index2,
         chr1->SetChromosome( index1, v2 );
         chr2->SetChromosome( index1, v1 );
     }
-}
+}*/
 
 // Apply one-point crossover to selected chromosome pair
 void Population::Crossover( const int& index1, const int& index2,
                             const int& point1, const int& point2 )
 {
-    if ( point1 < 0 || point1 >= chrSize )
+    //not necessary
+    if ( point1 < 0 || point1 >= chrSize || point2 < 0 || point2 >= chrSize)
         return;
-    if ( point2 < 0 || point2 >= chrSize )
-        return;
+
+
 
     int p1 = point1;
     int p2 = point2;
 
+    //not necessary
     if ( p1 > p2 )
     {
         int tmp = p1;
@@ -102,7 +106,8 @@ void Population::Crossover( const int& index1, const int& index2,
 
     // Do crossover on x portion of chromosome
     // either before or after point p2
-    start = 0;
+    start = chrSize / 2;
+    //start = 0;
     end = p2;
     if ( rand() % 100 < 50 ) {
         start = p2;
@@ -114,7 +119,44 @@ void Population::Crossover( const int& index1, const int& index2,
     }
 }
 
+// Apply the simplest two-point crossover to selected chromosome pair
+/*void Population::Crossover( const int& index1, const int& index2,
+                            const int& point1, const int& point2 )
+{
+    //not necessary
+    if ( point1 < 0 || point1 >= chrSize || point2 < 0 || point2 >= chrSize)
+        return;
+
+
+
+    int p1 = point1;
+    int p2 = point2;
+
+    //not necessary
+    if ( p1 > p2 )
+    {
+        int tmp = p1;
+        p1 = p2;
+        p2 = tmp;
+    }
+
+    Chromosome* chr1 = pop.at( index1 );
+    Chromosome* chr2 = pop.at( index2 );
+
+    int start = p1;
+    int end = p2;
+
+    for ( int i = start; i < end; i++ ) {
+        unsigned char v1 = chr1->GetChromosome( i );
+        unsigned char v2 = chr2->GetChromosome( i );
+        chr1->SetChromosome( i, v2 );
+        chr2->SetChromosome( i, v1 );
+    }
+
+}*/
+
 // Apply mutation to selected chromosome: x part or y part
+//на проміжку заміняють все на протилежне. ПОМІНЯТИ! НАДТО РАДИКАЛЬНО!
 void Population::Mutation( const int& index )
 {
     Chromosome* chr = pop.at( index );
@@ -137,12 +179,12 @@ double Population::EvaluatePopulation( float& bx, float& by )
     double bestFitness = infinity;
     int bestFitnessIndex = 0;
 
-    for ( int i = 0; i < (int) pop.size(); i++ ) {
+    for ( int i = 0; i < pop.size(); i++ ) {
         float x, y;
         double fitness = CalcChromosomeFitness( i, x, y );
         Chromosome* chr = pop.at( i );
+        //встановлюємо фітнес для хромосоми
         chr->SetFitness( fitness );
-        //pop.SetFitSum(fitness);
         SetFitSum(fitness);
 
         // Output the chromosome (optional - comment out if desired)
@@ -150,11 +192,11 @@ double Population::EvaluatePopulation( float& bx, float& by )
         totalFitness += fitness;
 
         // Store best solution
-        if ( i == 0 )
-            bestFitness = fitness;
+
         if ( fitness < bestFitness ) {
             bestFitness = fitness;
             bestFitnessIndex = i;
+            //у змінні впишуться числа х і у з найкращим результатом
             bx= x;
             by= y;
         }
@@ -176,8 +218,9 @@ double Population::GetFitSum() {
 // Create an arbitrary random chromosome
 Chromosome* Population::CreateRandomChromosome()
 {
-    Chromosome* chr = new Chromosome();
+    Chromosome* chr = new Chromosome(chrSize);
 
+    //Тут рандомна хромосома тупо заповнюється одиничками і нулями. Може, краще в конструктор дати?
     // Randomize chromosome elements
     for ( int i = 0; i < chr->size(); i++ )
     {
@@ -217,17 +260,17 @@ double Population::CalcChromosomeFitness_IEEE754(
     Chromosome* chr = pop.at( index );
 
     // Put the first 32 bits (X) into a string
-    std::string xstr = GetXstring( chr );
+    std::string xstr = GetString( chr, 1 );
 
     // Get x value by converting from IEEE 754 into decimal
     float x = GetFloat32_IEEE754( xstr );
 
     // Put the next 32 bits (Y) into a string
-    std::string ystr = GetYstring( chr );
+    std::string ystr = GetString( chr, 2 );
 
     // Get y value by converting from IEEE 754 into decimal
     float y = GetFloat32_IEEE754( ystr );
-    double fitness = CalculateFitnessFunction( x, y );
+    double fitness = CalculateFitnessFunction<float>( x, y );
 
     // Return the chromosome fitness
     xv = x;
@@ -246,17 +289,17 @@ double Population::CalcChromosomeFitnessGray(
     Chromosome* chr = pop.at( index );
 
     // Put the first 32 bits (X) into a string
-    std::string xstr = GetXstring( chr );
+    std::string xstr = GetString( chr, 1 );
 
     // Get x value by converting from Gray into decimal
     float x = GetFloat32_Gray( xstr );
 
     // Put the next 32 bits (Y) into a string
-    std::string ystr = GetYstring( chr );
+    std::string ystr = GetString( chr, 2 );
 
     // Get y value by converting from Gray into decimal
     float y = GetFloat32_Gray( ystr );
-    double fitness = CalculateFitnessFunction( x, y );
+    double fitness = CalculateFitnessFunction<float>( x, y );
 
     // Return the chromosome fitness
     xv = x; yv = y;
@@ -270,7 +313,7 @@ void Population::SetChromosomeSize( const int& size )
     chrSize = size;
 }
 
-// Get the 'X' string portion of tye chromsome
+/*// Get the 'X' string portion of the chromsome
 std::string Population::GetXstring( Chromosome* chr )
 {
     std::string xstr;
@@ -297,6 +340,21 @@ std::string Population::GetYstring( Chromosome* chr )
     }
 
     return ystr;
+}*/
+
+// Get the 'ith' string portion of the chromsome
+std::string Population::GetString( Chromosome* chr, int parNumb )
+{
+    std::string xstr;
+    int start = (parNumb - 1)*32;
+
+    for ( int i = start; i < (start + 32); i++ )
+    {
+        unsigned char value = chr->GetChromosome( i );
+        xstr.append( value == 0 ? "0" : "1" );
+    }
+
+    return xstr;
 }
 
 // Convert 32-bit binary into the decimal
@@ -304,7 +362,7 @@ std::string Population::GetYstring( Chromosome* chr )
 float Population::GetFloat32_IEEE754( std::string Binary )
 {
     int HexNumber = Binary32ToHex( Binary );
-    bool negative = !!(HexNumber & 0x80000000);
+    bool negative = (HexNumber & 0x80000000);
     int exponent = (HexNumber & 0x7f800000) >> 23;
     int sign = negative ? -1 : 1;
 
@@ -351,7 +409,22 @@ int Population::Binary32ToHex( std::string Binary )
 }
 
 // Calculate the overall fitness, f(x, y)
+/*template <typename ... Axes>
 double Population::CalculateFitnessFunction( const float& x,
+
+                                             Axes&... axes )
+{
+    // Rosenbrock: (1-x)^2 + 100(y-x*x)^2
+    // (see http://en.wikipedia.org/wiki/Rosenbrock_function)
+    constexpr int size = sizeof...(axes)+1;
+    std::vector<std::reference_wrapper<const float>> arr = { x, axes ... };
+
+    double fitness = ( pow( (double)( 1.0 - x ), 2 ) ) +
+                     100 * ( pow( (double) ( arr[0] - ( x * x ) ), 2 ) ) ;
+
+    return fitness;
+}*/
+/*double Population::CalculateFitnessFunction( const float& x,
                                              const float& y )
 {
     // Rosenbrock: (1-x)^2 + 100(y-x*x)^2
@@ -361,7 +434,7 @@ double Population::CalculateFitnessFunction( const float& x,
                      100 * ( pow( (double) ( y - ( x * x ) ), 2 ) ) ;
 
     return fitness;
-}
+}*/
 // Get fitness of selected chromosome
 double Population::GetChromosomeFitness( const int& index ) const
 {
@@ -403,6 +476,8 @@ std::string Population::Gray2Bin( std::string gray )
     {
         int bk = bin.at( i + 1 ) - '0';
         int gi = gray.at( i + 1 ) - '0';
+
+        //якщо там нулик
 
         if ( bk == 0 )
         {

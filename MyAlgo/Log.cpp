@@ -1,7 +1,3 @@
-//
-// Created by bohdan on 6/19/17.
-//
-
 #include "Log.h"
 
 Log::Log()

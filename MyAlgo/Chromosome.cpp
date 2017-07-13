@@ -1,15 +1,17 @@
-//
-// Created by bohdan on 6/19/17.
-//
-
 #include "Chromosome.h"
 #include <iostream>
 
 // Constructor
-Chromosome::Chromosome(void) {}
+Chromosome::Chromosome(int size): chrSize(size) {
+    chr = new char[size];
+}
+//Chromosome::Chromosome(void): chrSize(64) {}
 
 // Destructor
-Chromosome::~Chromosome(void) {}
+Chromosome::~Chromosome(void) {
+    delete[] chr;
+
+}
 
 // Set chromosome element
 void Chromosome::SetChromosome( const int& index, const unsigned char& value )
@@ -30,9 +32,6 @@ void Chromosome::SetFitness( const double& value )
 {
     fitness = value;
 }
-/*void Chromosome::SetFitSum( const double& value ){
-    fitSum += value;
-};*/
 
 // Get chromosome fitness
 double Chromosome::GetFitness() const

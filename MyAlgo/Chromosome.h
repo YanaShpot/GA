@@ -1,18 +1,13 @@
-//
-// Created by bohdan on 6/19/17.
-//
-
 #ifndef MYGA_CHROMOSOME_H
 #define MYGA_CHROMOSOME_H
 #pragma once
-
-const int chrSize = 64;
 
 class Chromosome
 {
 public:
 
-    Chromosome(void);
+    //Chromosome(void);
+    Chromosome(int size = 64);
     ~Chromosome(void);
 
     void SetFitness( const double& value );
@@ -21,11 +16,14 @@ public:
     double GetFitness() const;
     int size() const;
     void Print( const int& index ) const;
+    //void SetChromosomeSize( const int& size );
 
 private:
 
-    unsigned char chr[ chrSize ];
+    // const  int chrSize;
+    //unsigned char chr[chrSize];
+    char* chr;
+    const int chrSize;
     double fitness;
-
 };
 #endif //MYGA_CHROMOSOME_H

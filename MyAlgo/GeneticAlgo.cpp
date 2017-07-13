@@ -1,22 +1,18 @@
-//
-// Created by bohdan on 6/19/17.
-//
-
 #include "GeneticAlgo.h"
 #include <sstream>
 #include <stdlib.h>
 #include <math.h>
 
-const std::string filepath = "/home/bohdan/Desktop/haaa.txt";
+const std::string filepath = "/Users/Yasya/Desktop/Second.txt";
 
 GeneticAlgorithm::GeneticAlgorithm(void)
 {
     // Give it some default parameters
     encoding = 0;
     mutationRate = 5;
-    crossoverRate = 90;
-    populationSize = 100;
-    numberIterations = 10000;
+    crossoverRate = 5;//90;
+    populationSize = 10;
+    numberIterations = 10;//10000;
     chromosomeSize = 64;
     tournamentSize = populationSize / 5;
     bestFitness = infinity;
@@ -45,7 +41,7 @@ void GeneticAlgorithm::Run()
 {
     for ( int i = 0; i < numberIterations; i++ )
     {
-        LogResult( Evaluate(), i, 10 );
+        LogResult( Evaluate(), i, 100 );
         Select();
         Crossover();
         Mutate();
@@ -90,6 +86,7 @@ void GeneticAlgorithm::Crossover()
             // Point1: 32 - 64
             int point2 = chromosomeSize / 2 +
                          rand() % ( chromosomeSize / 2 );
+            //цього вайлу нема
 
             while ( point1 == point2 ) {
                 point2 = chromosomeSize / 2 +
@@ -228,7 +225,7 @@ void GeneticAlgorithm::LogResult( const double& result,
     if ( iter % count == 0 )
     {
         std::stringstream ss;
-        ss << iter << "t" << result << "t" << best_x << "t" << best_y;
+        ss << iter << "    " << result << "    " << best_x << "    " << best_y;
         log.Write( (char*) ss.str().c_str() );
     }
 }

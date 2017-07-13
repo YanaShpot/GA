@@ -1,7 +1,3 @@
-//
-// Created by bohdan on 6/19/17.
-//
-
 #ifndef MYGA_GENETICALGO_H
 #define MYGA_GENETICALGO_H
 
