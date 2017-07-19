@@ -16,7 +16,7 @@ public:
                      const int& mrate,
                      const int& psize,
                      const int& iter,
-                     const int& csize,
+                     const int& params,
                      const int& tsize,
                      const std::string& path );
     void Run();
@@ -37,7 +37,7 @@ private:
                         const int& mrate,
                         const int& psize,
                         const int& iter,
-                        const int& csize,
+                        const int& params,
                         const int& tsize );
 
     void LogResult( const double& result,
@@ -46,11 +46,12 @@ private:
 
 private:
 
-    int encoding;
+    //int encoding;
     int mutationRate;
     int crossoverRate;
     int populationSize;
     int numberIterations;
+    int numberParams;
     int chromosomeSize;
     int tournamentSize;
 
